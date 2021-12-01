@@ -592,7 +592,7 @@ MonoBehaviour:
   _slider: {fileID: 553508674}
   _text: {fileID: 2115926253}
   _player: {fileID: 306072525}
-  _changeSpeed: 0.1
+  _changeSpeed: 0.3
 --- !u!1001 &837091096
 PrefabInstance:
   m_ObjectHideFlags: 0

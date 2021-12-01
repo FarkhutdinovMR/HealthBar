@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class HealthBar : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private float _changeSpeed;
 
     private float _currentValue;
-    private float _runningTime;
+    private Coroutine _changeHealth;
 
     private void OnEnable()
     {
@@ -22,19 +23,24 @@ public class HealthBar : MonoBehaviour
         _player.HealthChanged -= OnHealthChanged;
     }
 
-    private void Update()
-    {
-        if (_slider.value != _currentValue)
-        {
-            _runningTime += Time.deltaTime;
-            _slider.value = Mathf.Lerp(_slider.value, _currentValue, _runningTime * _changeSpeed);
-        }
-    }
-
     private void OnHealthChanged(float value)
     {
-        _runningTime = 0f;
         _currentValue = value / 100f;
         _text.SetText($"Çהמנמגüו: {value.ToString()}");
+
+        if (_changeHealth != null)
+            StopCoroutine(_changeHealth);
+
+        _changeHealth = StartCoroutine(nameof(ChangeHealth));
+    }
+
+    private IEnumerator ChangeHealth()
+    {
+        while (Mathf.Approximately(_slider.value, _currentValue) == false)
+        {
+            _slider.value = Mathf.MoveTowards(_slider.value, _currentValue, _changeSpeed * Time.deltaTime);
+
+            yield return null;
+        }
     }
 }
